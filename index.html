@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lanchonete Sabor do Bairro</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+header {
+    background-color: #d62828;
+    color: white;
+    padding: 20px;
+}
+
+h1 {
+    margin: 0;
+}
+
+.cardapio, .carrinho {
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+
+.item {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+button {
+    background-color: #2a9d8f;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+button:hover {
+    background-color: #21867a;
+}
+
+.total {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    .cardapio, .carrinho {
+        margin: 10px;
+    }
+}
+</style>
+
+</head>
+<body>
+
+<header>
+    <h1>🍕 Lanchonete Sabor do Bairro</h1>
+    <p>Peça direto do seu celular!</p>
+</header>
+
+<section class="cardapio">
+    <h2>Cardápio</h2>
+
+    <div class="item">
+        <h3>Pizza Calabresa</h3>
+        <p>R$ 35,00</p>
+        <button onclick="adicionarCarrinho('Pizza Calabresa', 35)">Adicionar</button>
+    </div>
+
+    <div class="item">
+        <h3>X-Burguer</h3>
+        <p>R$ 20,00</p>
+        <button onclick="adicionarCarrinho('X-Burguer', 20)">Adicionar</button>
+    </div>
+
+    <div class="item">
+        <h3>Batata Frita</h3>
+        <p>R$ 15,00</p>
+        <button onclick="adicionarCarrinho('Batata Frita', 15)">Adicionar</button>
+    </div>
+
+    <div class="item">
+        <h3>Refrigerante</h3>
+        <p>R$ 6,00</p>
+        <button onclick="adicionarCarrinho('Refrigerante', 6)">Adicionar</button>
+    </div>
+
+</section>
+
+<section class="carrinho">
+    <h2>🛒 Seu Pedido</h2>
+    <ul id="lista-carrinho" style="list-style: none; padding: 0;"></ul>
+    <p class="total"><strong>Total: R$ <span id="total">0.00</span></strong></p>
+    <button onclick="finalizarPedido()">Finalizar Pedido via WhatsApp</button>
+</section>
+
+<script>
+let carrinho = [];
+let total = 0;
+
+function adicionarCarrinho(nome, preco) {
+    carrinho.push({ nome, preco });
+    total += preco;
+    atualizarCarrinho();
+}
+
+function atualizarCarrinho() {
+    const lista = document.getElementById("lista-carrinho");
+    const totalElemento = document.getElementById("total");
+
+    lista.innerHTML = "";
+
+    carrinho.forEach((item, index) => {
+        let li = document.createElement("li");
+        li.innerHTML = item.nome + " - R$ " + item.preco.toFixed(2) +
+        " <button onclick='removerItem(" + index + ")' style='background:red;margin-left:10px;'>X</button>";
+        lista.appendChild(li);
+    });
+
+    totalElemento.textContent = total.toFixed(2);
+}
+
+function removerItem(index) {
+    total -= carrinho[index].preco;
+    carrinho.splice(index, 1);
+    atualizarCarrinho();
+}
+
+function finalizarPedido() {
+    if (carrinho.length === 0) {
+        alert("Seu carrinho está vazio!");
+        return;
+    }
+
+    let mensagem = "Olá! Gostaria de fazer o seguinte pedido:%0A";
+
+    carrinho.forEach(item => {
+        mensagem += "- " + item.nome + "%0A";
+    });
+
+    mensagem += "%0ATotal: R$ " + total.toFixed(2);
+
+    // Substitua pelo número real da lanchonete
+    window.open("https://wa.me/5599999999999?text=" + mensagem);
+}
+</script>
+
+</body>
+</html>
